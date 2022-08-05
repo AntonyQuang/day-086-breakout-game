@@ -3,6 +3,7 @@ from turtle import Screen
 from paddle import Paddle
 from blocks import Block
 from ball import Ball
+from scoreboard import Scoreboard, ScoreboardBorder
 
 screen = Screen()
 screen.setup(width=600, height=900)
@@ -10,6 +11,7 @@ screen.bgcolor("#30262E")
 screen.title("Let's Play Breakout")
 screen.tracer(0)
 
+scoreboard = Scoreboard()
 paddle = Paddle()
 ball = Ball()
 # Setting up blocks
@@ -30,9 +32,10 @@ for column in range(columns):
     for row in range(rows):
         y = 230 - 25*row
         blocks.append(Block((x, y), block_row_colors[row]))
-
+ceiling = ScoreboardBorder()
 screen.listen()
-
+screen.update()
+time.sleep(1)
 game_is_on = True
 while game_is_on:
     time.sleep(ball.move_speed)
@@ -62,5 +65,11 @@ while game_is_on:
             if ball.ycor() - block.ycor() > 4 and ball.y_move < 0:
                 ball.ceiling_bounce()
             block.goto(0, -500)
+            scoreboard.point()
 
     ball.move()
+    if ball.ycor() < -460:
+        game_is_on = False
+        time.sleep(1)
+
+screen.exitonclick()
